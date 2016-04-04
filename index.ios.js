@@ -8,23 +8,65 @@ import React, {
   Component,
   StyleSheet,
   Text,
-  View
+  View,
+  ListView,
+  TouchableHighlight,
 } from 'react-native';
 
+var TODOS = [
+  {name: 'Terry', disc: 'coding'},
+  {name: 'Terry', disc: 'eating'},
+  {name: 'Terry', disc: 'playing'},
+];
+
 class ReactNativeStarter extends Component {
+
+  constructor() {
+    super()
+
+    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.state = {
+      dataSource: ds.cloneWithRows(TODOS),
+    };
+  }
+
+  renderTodos(todo) {
+    return(
+      <View style={styles.row}>
+        <View style={{flex: 1}}>
+          <Text style={styles.textAlignCenter}>
+          {todo.name}
+          </Text>
+        </View>
+        <View style={{flex: 1}}>
+          <Text style={styles.textAlignCenter}>
+            {todo.disc}
+          </Text>
+        </View>
+
+      </View>
+    );
+  }
+
+  onPressAdd() {
+    var rows = this.state.dataSource;
+    var newRow = {name: 'test', disc: 'disc'};
+    var newRows = rows.concat([newRow]);
+    this.setState({dataSource: newRows});
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
+        <ListView style={styles.list} dataSource={this.state.dataSource} renderRow={this.renderTodos} ></ListView>
+        <View style={{}}>
+          <TouchableHighlight onPress={this.onPressAdd}>
+            <Text style={styles.textAlignCenter}>Add</Text>
+          </TouchableHighlight>
+          <TouchableHighlight onPress={this.onPressDelete}>
+            <Text style={styles.textAlignCenter}>Delete</Text>
+          </TouchableHighlight>
+        </View>
       </View>
     );
   }
@@ -32,20 +74,25 @@ class ReactNativeStarter extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 20,
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    //backgroundColor: 'red',
+    borderWidth: 1,
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  list: {
+    //backgroundColor: 'blue',
+    borderWidth: 1,
+    flex: 1,
   },
-  instructions: {
+  row: {
+    flexDirection: 'row',
+    padding: 10,
+    backgroundColor: '#F6F6F6',
+    borderBottomWidth: 1,
+  },
+  textAlignCenter: {
     textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
   },
 });
 
