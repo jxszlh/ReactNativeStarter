@@ -1,1 +1,1 @@
-# ReactNativeStarter
+# ReactNativeStarter for testing
